@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automatic Calculator</title>
+  <link rel="icon" type="image/x-icon" href="https://th.bing.com/th/id/OIG2.seRG7dIYftuiV7U2YtpN?w=270&h=270&c=6&r=0&o=5&pid=ImgGn">
+  <style>
+* {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: courier new;
+      font-weight: 700;
+      font-size: 25px;
+      cursor: none;
+    }
+
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction:column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #121212;
+      color: #fff;
+    }
+
+    .calculator {
+      top:0;
+      right:0;
+      display: flex;
+      flex-direction:column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      width: 300px;
+      height: 125px;
+      background-color: #1e1e1e;
+      overflow: hidden;
+      border-radius: 10px;
+      animation: rainbowBorder linear 10s infinite;
+    }
+
+    .input-screen {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: none;
+      outline: none;
+      padding: 25px;
+      width: 250px;
+      height: 75px;
+      background-color: #333;
+      color: #fff;
+      border-radius: 10px;
+    }
+
+    .input-screen:focus {
+      border: 1px solid #61dafb;
+    }
+
+    @keyframes rainbowBorder {
+      0% {
+        border: 5px solid #ff0000;
+      }
+      16.666% {
+        border: 5px solid #ff9900;
+      }
+      33.333% {
+        border: 5px solid #ffff00;
+      }
+      50% {
+        border: 5px solid #33cc33;
+      }
+      66.666% {
+        border: 5px solid #3399ff;
+      }
+      83.333% {
+        border: 5px solid #9933ff;
+      }
+      100% {
+        border: 5px solid #ff0066;
+      }
+    }
+
+  .character-counter {
+    display:none;
+  }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 25px;
+      left: 25px;
+      width: 450px;
+      height: 450px;
+	background:linear-gradient(rgba(26,26,26,0.7),rgba(26,26,26,0.7)),url("https://wallpapercave.com/wp/wp7441225.jpg");
+	background-repeat:none;
+	background-attachment:fixed;
+	background-size:cover;
+      justify-content: center;
+      align-items: center;
+      z-index:9999;
+      border-radius: 25px;
+      box-shadow:0 0 25px #27d027;
+      
+    }
+
+    .overlay-content {
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      cursor: pointer;
+    }
+
+    .close-btn::before, .close-btn::after {
+      content: '';
+      position: absolute;
+      height: 25px;
+      width: 2px;
+      background-color: #cdcdcd;
+      border:2px solid #cdcdcd;
+      border-radius:25%;
+    }
+
+    .close-btn::before {
+      transform: rotate(45deg);
+    }
+
+    .close-btn::after {
+      transform: rotate(-45deg);
+    }
+
+.ui {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.row {
+	display: flex;
+}
+.cell {
+	border: none;
+	width: 80px;
+	height: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	cursor: pointer;
+	color:#27d027;
+	transform:translateY(-25px);
+}
+.cell:active {
+	outline: none;
+}
+/* 3*3 Grid */
+#b1{
+	border-bottom: 2px solid #27d027;
+	border-right: 2px solid #27d027;
+	background:transparent;
+}
+
+#b2 {
+	border-bottom: 2px solid #27d027;
+	border-right: 2px solid #27d027;
+	border-left: 2px solid #27d027;
+	background:transparent;
+}
+
+#b3 {
+	border-bottom: 2px solid #27d027;
+	border-left: 2px solid #27d027;
+	background:transparent;
+}
+
+#b4 {
+	border-top: 2px solid #27d027;
+	border-bottom: 2px solid #27d027;
+	border-right: 2px solid #27d027;
+	background:transparent;
+}
+	
+#b5 {
+	border: 2px solid #27d027;
+	background:transparent;
+}
+
+#b6 {
+	border-top: 2px solid #27d027;
+	border-bottom: 2px solid #27d027;
+	border-left: 2px solid #27d027;
+	background:transparent;
+}
+
+#b7 {
+	border-top: 2px solid #27d027;
+	border-right: 2px solid #27d027;
+	background:transparent;
+}
+
+#b8 {
+	border-top: 2px solid #27d027;
+	border-right: 2px solid #27d027;
+	border-left: 2px solid #27d027;
+	background:transparent;
+}
+
+#b9 {
+	border-top: 2px solid #27d027;
+	border-left: 2px solid #27d027;
+	background:transparent;
+}
+/* Reset Button */
+#but {
+	box-sizing: border-box;
+	width: 150px;
+	height: 50px;
+	border: 2px solid #27d027;
+	margin-left: auto;
+	border-radius: 4px;
+	background-color: #2a2a2a;
+	color: #27d027;
+	cursor: pointer;
+	transform:translate(40px,-50px);
+}
+
+#but:hover {
+	color:#cdcdcd;
+	border:2px solid #cdcdcd;
+	transition:0.5s;
+	box-shadow:2px 2px 10px #cdcdcd;
+}
+
+    .clock-overlay {
+      display: none;
+      position: fixed;
+      top:25px;
+      left:25px;
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(rgba(26, 26, 26, 0.7), rgba(26, 26, 26, 0.7)), url("your-clock-overlay-image.jpg");
+      background-repeat: none;
+      background-attachment: fixed;
+      background-size: cover;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      border-radius: 15px;
+      box-shadow: 0 0 25px #cdcdcd;
+    }
+
+    .clock-overlay-content {
+      position: relative;
+    }
+
+    .clock-close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      cursor: pointer;
+    }
+
+    .clock-close-btn::before, .clock-close-btn::after {
+      content: '';
+      position: absolute;
+      height: 25px;
+      width: 2px;
+      background-color: #cdcdcd;
+      border: 2px solid #cdcdcd;
+      border-radius: 25%;
+    }
+
+    .clock-close-btn::before {
+      transform: rotate(45deg);
+    }
+
+    .clock-close-btn::after {
+      transform: rotate(-45deg);
+    }
+
+.clock {
+  position:relative;
+  width:400px;
+  height:400px;
+  background:#cdcdcd;
+  display:flex; 
+  justify-content:center;
+  align-items:center;
+  border-radius:50px;
+  box-shadow:30px 30px 30px -10px rgba(0,0,0,0.5), inset 15px 15px 10px rgba(255,255,255,0.5), -15px -15px 35px rgba(255,255,255,0.5), inset -1px -1px 10px rgba(0,0,0,0.5);
+}
+.clock::before {
+  content:'';
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:#ffff00;
+  border-radius:50%;
+  z-index:1000;
+  box-shadow:0 0 0 1px #ffff00, 0 0 0 3px #cdcdcd, 0 0 5px 5px rgba(0,0,0,0.15);
+}
+.clock .numbers {
+  position:absolute;
+  inset:35px;
+  background:#000044;
+  border-radius:50%;
+  box-shadow:5px 5px 15px #000044, inset 5px 5px 5px rgba(255,255,255,0.5), -6px -6px 10px rgba(255,255,255,1);
+}
+.clock .numbers span {
+  position:absolute;
+  inset:5px;
+  text-align:center;
+  color:#cdcdcd;
+  font-size:25px;
+  transform:rotate(calc(30deg * var(--i)))
+}
+.clock .numbers span b {
+  font-weight:700;
+  display:inline-block;
+  transform:rotate(calc(-30deg * var(--i)))
+}
+.clock .numbers::before {
+  content:'';
+  position:absolute;
+  inset:35px;
+  background:linear-gradient(#0bb,#27d027);
+  border-radius:50%;
+  animation:animate 2s linear infinite;
+}
+@keyframes animate {
+  0% {
+    transform:rotate(360deg);
+  }
+  100% {
+    transform:rotate(0deg);
+  }
+}
+.clock .numbers::after {
+  content:'';
+  position:absolute;
+  inset:40px;
+  background:#000044;
+  border-radius:50%;
+  animation:animate 2s linear infinite;
+}
+.clock .numbers .circle {
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  z-index:10;
+}
+.clock .numbers .circle i {
+  position:absolute;
+  width:3px;
+  height:50%;
+  background:#cdcdcd;
+  transform-origin:bottom;
+}
+.clock .numbers .circle#hr i {
+  width:4px;
+  transform:scaleY(0.55);
+}
+.clock .numbers .circle#mn i {
+  transform:scaleY(0.65);
+}
+.clock .numbers .circle#sc i {
+  width:2px;
+  transform:scaleY(0.75);
+  background:#ffff00;
+  box-shadow:0 30px 0 #ffff00;
+}
+
+    #calculator-container {
+      flex: 1;
+      padding: 20px;
+    }
+
+    #sidebar {
+      width: 0;
+      height: 93%;
+      background-color: rgba(26,26,26,0.7);
+      overflow-x: hidden;
+      transition: 0.5s;
+      position: fixed;
+      top: 25px;
+      left: 25px;
+      border-radius:25px;
+      box-shadow:0 0 25px #00ffff;
+    }
+
+    #sidebar-content {
+      padding: 20px;
+      color: #cdcdcd;
+    }
+
+    #expression-history {
+      margin-top: 25px;
+    }
+
+    #close-btn {
+      cursor: pointer;
+      position: absolute;
+      top: 5px;
+      right: 10px;
+    }
+
+    #loader {
+      background: #000 url(https://i.pinimg.com/originals/bc/56/b3/bc56b31a50e519be2ed335a47e75bc62.gif) no-repeat center center;
+      height: 100vh;
+      background-size:25%;
+      width: 100%;
+      position: fixed;
+      z-index:100;
+    }
+
+    #logo-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      display: block;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #logo-overlay img {
+      width: 150px;
+      height: 150px;
+      clip-path: circle(50%);
+    }
+
+.cursor {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border: 2px solid #7a7a7a;
+  transition: all 200ms ease-out;
+  position: fixed;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  transform: translate(calc(-50% + 15px), -50%);
+  z-index: 2;
+}
+
+.cursor2 {
+  width: 12.5px;
+  height: 12.5px;
+  border-radius: 100%;
+  background-color: #7a7a7a;
+  opacity: 1;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: width .3s, height .3s, opacity .3s;
+  z-index: 2;
+}
+
+.cursorinnerhover {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(90deg, #80ff80, #8080ff);
+}
+</style>
+</head>
+<body>
+<div id="loader">
+<div id="logo-overlay">
+  <img src="https://th.bing.com/th/id/OIG2.seRG7dIYftuiV7U2YtpN?w=270&h=270&c=6&r=0&o=5&pid=ImgGn" alt="Overlay Image">
+</div>
+</div>
+
+
+
+<div class="cursor"></div>
+<div class="cursor2"></div>
+
+  <div class="calculator" id="calculator">
+    <div class="overlay" id="overlay">
+      <div class="close-btn" onclick="closeOverlay()"></div>
+      <div class="overlay-content">
+<div id="main">
+	<div class="ui">
+		<div class="row">
+			<input type="text" id="b1" class="cell" onclick="myfunc_3(); myfunc(); sound();" readonly>
+			<input type="text" id="b2" class="cell" onclick="myfunc_4(); myfunc(); sound();" readonly>
+			<input type="text" id="b3" class="cell" onclick="myfunc_5(); myfunc(); sound();" readonly>
+		</div>
+		<div class="row">
+			<input type="text" id="b4" class="cell" onclick="myfunc_6(); myfunc(); sound();" readonly>
+			<input type="text" id="b5" class="cell" onclick="myfunc_7(); myfunc(); sound();" readonly>
+			<input type="text" id="b6" class="cell" onclick="myfunc_8(); myfunc(); sound();" readonly>
+		</div>
+		<div class="row">
+			<input type="text" id="b7" class="cell" onclick="myfunc_9(); myfunc(); sound();" readonly>
+			<input type="text" id="b8" class="cell" onclick="myfunc_10();myfunc(); sound();" readonly>
+			<input type="text" id="b9" class="cell" onclick="myfunc_11();myfunc(); sound();" readonly>
+		</div>
+	</div>
+	<br><br><br>
+	<button id="but" onclick="myfunc_2()">RESET</button>
+</div>
+    </div>
+    </div>
+
+  <div class="clock-overlay" id="clock-overlay">
+    <div class="clock-close-btn" onclick="closeClockOverlay()"></div>
+    <div class="clock-overlay-content">
+<div class="clock">
+<div class="numbers">
+<span style="--i:12;"><b>12</b></span>
+<span style="--i:1;"><b>1</b></span>
+<span style="--i:2;"><b>2</b></span>
+<span style="--i:3;"><b>3</b></span>
+<span style="--i:4;"><b>4</b></span>
+<span style="--i:5;"><b>5</b></span>
+<span style="--i:6;"><b>6</b></span>
+<span style="--i:7;"><b>7</b></span>
+<span style="--i:8;"><b>8</b></span>
+<span style="--i:9;"><b>9</b></span>
+<span style="--i:10;"><b>10</b></span>
+<span style="--i:11;"><b>11</b></span>
+<div class="circle" id="hr"><i></i></div>
+<div class="circle" id="mn"><i></i></div>
+<div class="circle" id="sc"><i></i></div>
+</div>
+</div>
+    </div>
+  </div>
+
+    <div class="input-screen" contenteditable="true" id="inputScreen" onkeyup="handleKeyPress(event)" title="Calculator, Searchbar, Clock, Hex to RGB, Notepad, IP, Font, Game"></div>
+    <div class="character-counter" id="characterCounter">Characters: 0</div>
+</div>
+
+  <div id="sidebar">
+    <div id="sidebar-content">
+      <span id="close-btn" onclick="closeSidebar()">×</span>
+      <h2>Calculation History</h2>
+      <div id="expression-history"></div>
+    </div>
+  </div>
+<script>
+let isNoteMode = false;
+let noteContent = '';
+
+var loader = document.getElementById("loader");
+
+function updateLoaderDisplay() {
+  loader.style.display = navigator.onLine ? "none" : "block";
+
+  document.getElementById("logo-overlay").style.opacity = navigator.onLine ? "0" : "1";
+}
+
+window.addEventListener("load", function () {
+  updateLoaderDisplay();
+
+  window.addEventListener('online', updateLoaderDisplay);
+
+  window.addEventListener('offline', updateLoaderDisplay);
+});
+
+    function handleKeyPress(event) {
+      const inputScreen = document.getElementById('inputScreen');
+      const calculator = document.getElementById('calculator');
+      const expression = inputScreen.innerText.trim();
+
+      if (event.key === 'Enter') {
+        if (expression.startsWith('"') && expression.endsWith('"')) {
+          // Extract the search query within double quotes
+          const searchQuery = expression.slice(1, -1);
+          openGoogleSearch(searchQuery);
+        } else if (expression.toLowerCase() === '-c') {
+          openClockOverlay();
+        } else if (expression.startsWith('#')) {
+          displayRGBFromHex(expression);
+        } else if (expression.toLowerCase() === '-n') {
+          startNoteMode();
+        } else if (expression.toLowerCase() === '-f') {
+          changeFontStyles();
+        } else if (expression.toLowerCase() === '-ip') {
+          displayIPAddress();
+        } else if (expression.toLowerCase() === '-g') {
+          openOverlay();
+        }
+      }
+      if (event.key === 'F7') {
+        calculateExpression();
+      }
+     updateCharacterCounter();
+    }
+
+    function calculateExpression() {
+      const inputScreen = document.getElementById('inputScreen');
+      const expression = inputScreen.innerText;
+
+      try {
+        var result = eval(expression);
+        alert(`Result: ${result}`);
+      } catch (error) {
+        alert('Invalid expression');
+      }
+
+      // Clear the input screen after calculation
+      inputScreen.innerText = '';
+
+      var historyDiv = document.getElementById("expression-history");
+      var historyItem = document.createElement("div");
+      historyItem.innerHTML = `<strong>${expression}</strong> = ${result}`;
+      historyDiv.insertBefore(historyItem, historyDiv.firstChild);
+
+      // Open the sidebar
+      document.getElementById("sidebar").style.width = '450px';
+      document.getElementById("close-btn").style.cursor = 'pointer';
+
+      document.getElementById("close-btn").style.fontSize = '50px';
+    }
+
+    function openGoogleSearch(query) {
+      const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+      window.open(googleSearchUrl, '_blank');
+      inputScreen.innerText = '';
+    }
+
+    function displayRGBFromHex(hexValue) {
+      const sanitizedHex = hexValue.replace(/[^0-9a-fA-F]/g, ''); // Remove non-hex characters
+      const isValidHex = /^[0-9a-fA-F]{6}$/.test(sanitizedHex);
+
+      if (isValidHex) {
+        const hexNumber = parseInt(sanitizedHex, 16);
+        const red = (hexNumber >> 16) & 255;
+        const green = (hexNumber >> 8) & 255;
+        const blue = hexNumber & 255;
+
+        alert(`RGB value for ${hexValue}:\n${red}, ${green}, ${blue}`);
+      } else {
+        alert('Invalid hex value');
+      }
+
+      inputScreen.innerText = '';
+    }
+
+    function startNoteMode() {
+      isNoteMode = true;
+      const inputScreen = document.getElementById('inputScreen');
+      const calculator = document.getElementById('calculator');
+      const characterCounter = document.getElementById('characterCounter');
+
+      inputScreen.addEventListener('input', updateCharacterCounter);
+
+      inputScreen.contentEditable = 'true';
+      inputScreen.style.border = '2px solid #61dafb';
+      inputScreen.style.width = '700px';
+      inputScreen.style.height = '450px';
+      inputScreen.style.transition = '3.14s ease-in-out';
+      inputScreen.style.backgroundColor = 'rgba(51, 51, 51, 0.5)';
+      calculator.style.width = '775px';
+      calculator.style.height = '525px';
+      calculator.style.transition = '3.14s ease-in-out';
+      calculator.style.background = 'linear-gradient(rgba(255, 138, 226, 0.5), rgba(255, 138, 226, 0.5)), url("https://th.bing.com/th/id/OIP.ir3oPLPaWgg_KrgwGu8TqAHaE5?rs=1&pid=ImgDetMain")';
+      calculator.style.backgroundPosition = 'center';
+      calculator.style.backgroundRepeat = 'no-repeat';
+      calculator.style.backgroundSize = 'cover';
+      characterCounter.style.color = '#500181';
+      characterCounter.style.display = 'block';
+      characterCounter.style.marginTop = '485px';
+      characterCounter.style.marginLeft = '530px';
+
+      // Update the character counter
+      updateCharacterCounter();
+    }
+
+     document.addEventListener('keydown', handleEscapeKey);
+
+  function handleEscapeKey(event) {
+    const inputScreen = document.getElementById('inputScreen');
+    const calculator = document.getElementById('calculator');
+    const isEscKey = event.key === 'Escape' || event.key === 'Esc';
+
+    if (isEscKey && inputScreen.contentEditable === 'true') {
+      saveNoteToFile(inputScreen.innerText);
+      inputScreen.innerText = '';
+      inputScreen.contentEditable = 'true';
+      inputScreen.style.border = 'none';
+      inputScreen.style.width = '250px';
+      inputScreen.style.height = '75px';
+      inputScreen.style.transition = '3.14s ease-in-out';
+      calculator.style.width = '300px';
+      calculator.style.height = '125px';
+      calculator.style.transition = '3.14s ease-in-out';
+      calculator.style.background = 'none';
+      inputScreen.style.backgroundColor = 'rgba(51, 51, 51, 1)';
+      characterCounter.style.display = 'none';
+
+      calculator.removeEventListener('keydown', handleEnterKey);
+      document.removeEventListener('keydown', handleEscapeKey);
+    }
+  }
+
+    function saveNoteToFile(note) {
+      const fileName = prompt('Save your note as a .txt file. Enter a file name:');
+      if (fileName) {
+        const blob = new Blob([note], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${fileName}.txt`;
+        link.click();
+      }
+    }
+
+    function changeFontStyles() {
+      const inputScreen = document.getElementById('inputScreen');
+
+      const fontSize = prompt('Enter font size (e.g., 16px):');
+      const fontColor = prompt('Enter font color (e.g., #00ff00):');
+      const fontFamily = prompt('Enter font family (e.g., Arial):');
+
+      if (fontSize) {
+        inputScreen.style.fontSize = fontSize;
+      }
+
+      if (fontColor) {
+        inputScreen.style.color = fontColor;
+      }
+
+      if (fontFamily) {
+        inputScreen.style.fontFamily = fontFamily;
+      }
+    }
+
+    async function displayIPAddress() {
+      try {
+        const response = await fetch('https://api64.ipify.org?format=json');
+        const data = await response.json();
+        const ipAddress = data.ip;
+        alert(`Your IP address is: ${ipAddress}`);
+      } catch (error) {
+        console.error('Error fetching IP address:', error);
+        alert('Error fetching IP address');
+      }
+
+      inputScreen.innerText = '';
+    }
+
+    function updateCharacterCounter() {
+      const inputScreen = document.getElementById('inputScreen');
+      const characterCounter = document.getElementById('characterCounter');
+      const characterCount = inputScreen.innerText.length;
+
+      characterCounter.textContent = `Characters: ${characterCount}`;
+    }
+
+    function openOverlay() {
+      const overlay = document.getElementById('overlay');
+      overlay.style.display = 'flex';
+    }
+
+    function closeOverlay() {
+      const overlay = document.getElementById('overlay');
+      overlay.style.display = 'none';
+    }
+
+function myfunc() {
+	var b1, b2, b3, b4, b5, b6, b7, b8, b9;
+	b1 = document.getElementById("b1").value;
+	b2 = document.getElementById("b2").value;
+	b3 = document.getElementById("b3").value;
+	b4 = document.getElementById("b4").value;
+	b5 = document.getElementById("b5").value;
+	b6 = document.getElementById("b6").value;
+	b7 = document.getElementById("b7").value;
+	b8 = document.getElementById("b8").value;
+	b9 = document.getElementById("b9").value;
+
+	var b1btn, b2btn, b3btn, b4btn, b5btn,
+		b6btn, b7btn, b8btn, b9btn;
+
+	b1btn = document.getElementById("b1");
+	b2btn = document.getElementById("b2");
+	b3btn = document.getElementById("b3");
+	b4btn = document.getElementById("b4");
+	b5btn = document.getElementById("b5");
+	b6btn = document.getElementById("b6");
+	b7btn = document.getElementById("b7");
+	b8btn = document.getElementById("b8");
+	b9btn = document.getElementById("b9");
+
+	if ((b1 == 'x' || b1 == 'X') && (b2 == 'x' ||
+		b2 == 'X') && (b3 == 'x' || b3 == 'X')) {
+		b4btn.disabled = true;
+		b5btn.disabled = true;
+		b6btn.disabled = true;
+		b7btn.disabled = true;
+		b8btn.disabled = true;
+		b9btn.disabled = true;
+
+		b1btn.style.color = "#cdcdcd";
+		b2btn.style.color = "#cdcdcd";
+		b3btn.style.color = "#cdcdcd";
+	} else if ((b1 == 'x' || b1 == 'X') && (b4 == 'x' ||
+		b4 == 'X') && (b7 == 'x' || b7 == 'X')) {
+		b2btn.disabled = true;
+		b3btn.disabled = true;
+		b5btn.disabled = true;
+		b6btn.disabled = true;
+		b8btn.disabled = true;
+		b9btn.disabled = true;
+
+		b1btn.style.color = "#cdcdcd";
+		b4btn.style.color = "#cdcdcd";
+		b7btn.style.color = "#cdcdcd";
+	} else if ((b7 == 'x' || b7 == 'X') && (b8 == 'x' ||
+		b8 == 'X') && (b9 == 'x' || b9 == 'X')) {
+		b1btn.disabled = true;
+		b2btn.disabled = true;
+		b3btn.disabled = true;
+		b4btn.disabled = true;
+		b5btn.disabled = true;
+		b6btn.disabled = true;
+
+		b7btn.style.color = "#cdcdcd";
+		b8btn.style.color = "#cdcdcd";
+		b9btn.style.color = "#cdcdcd";
+	} else if ((b3 == 'x' || b3 == 'X') && (b6 == 'x' ||
+		b6 == 'X') && (b9 == 'x' || b9 == 'X')) {
+		b1btn.disabled = true;
+		b2btn.disabled = true;
+		b4btn.disabled = true;
+		b5btn.disabled = true;
+		b7btn.disabled = true;
+		b8btn.disabled = true;
+
+		b3btn.style.color = "#cdcdcd";
+		b6btn.style.color = "#cdcdcd";
+		b9btn.style.color = "#cdcdcd";
+	} else if ((b1 == 'x' || b1 == 'X') && (b5 == 'x' ||
+		b5 == 'X') && (b9 == 'x' || b9 == 'X')) {
+		b2btn.disabled = true;
+		b3btn.disabled = true;
+		b4btn.disabled = true;
+		b6btn.disabled = true;
+		b7btn.disabled = true;
+		b8btn.disabled = true;
+
+		b1btn.style.color = "#cdcdcd";
+		b5btn.style.color = "#cdcdcd";
+		b9btn.style.color = "#cdcdcd";
+	} else if ((b3 == 'x' || b3 == 'X') && (b5 == 'x' ||
+		b5 == 'X') && (b7 == 'x' || b7 == 'X')) {
+		b1btn.disabled = true;
+		b2btn.disabled = true;
+		b4btn.disabled = true;
+		b6btn.disabled = true;
+		b8btn.disabled = true;
+		b9btn.disabled = true;
+
+		b3btn.style.color = "#cdcdcd";
+		b5btn.style.color = "#cdcdcd";
+		b7btn.style.color = "#cdcdcd";
+	} else if ((b2 == 'x' || b2 == 'X') && (b5 == 'x' ||
+		b5 == 'X') && (b8 == 'x' || b8 == 'X')) {
+		b1btn.disabled = true;
+		b2btn.disabled = true;
+		b4btn.disabled = true;
+		b6btn.disabled = true;
+		b7btn.disabled = true;
+		b9btn.disabled = true;
+
+		b2btn.style.color = "#cdcdcd";
+		b5btn.style.color = "#cdcdcd";
+		b8btn.style.color = "#cdcdcd";
+	} else if ((b4 == 'x' || b4 == 'X') && (b5 == 'x' ||
+		b5 == 'X') && (b6 == 'x' || b6 == 'X')) {
+		b1btn.disabled = true;
+		b2btn.disabled = true;
+		b3btn.disabled = true;
+		b7btn.disabled = true;
+		b8btn.disabled = true;
+		b9btn.disabled = true;
+
+		b4btn.style.color = "#cdcdcd";
+		b5btn.style.color = "#cdcdcd";
+		b6btn.style.color = "#cdcdcd";
+	} else if ((b1 == 'O' || b1 == 'O') && (b2 == 'O' ||
+		b2 == 'O') && (b3 == 'O' || b3 == 'O')) {
+		b4btn.disabled = true;
+		b5btn.disabled = true;
+		b6btn.disabled = true;
+		b7btn.disabled = true;
+		b8btn.disabled = true;
+		b9btn.disabled = true;
+
+		b1btn.style.color = "#cdcdcd";
+		b2btn.style.color = "#cdcdcd";
+		b3btn.style.color = "#cdcdcd";
+	} else if ((b1 == 'O' || b1 == 'O') && (b4 == 'O' ||
+		b4 == 'O') && (b7 == 'O' || b7 == 'O')) {
+		b2btn.disabled = true;
+		b3btn.disabled = true;
+		b5btn.disabled = true;
+		b6btn.disabled = true;
+		b8btn.disabled = true;
+		b9btn.disabled = true;
+
+		b1btn.style.color = "#cdcdcd";
+		b4btn.style.color = "#cdcdcd";
+		b7btn.style.color = "#cdcdcd";
+	} else if ((b7 == 'O' || b7 == 'O') && (b8 == 'O' ||
+		b8 == 'O') && (b9 == 'O' || b9 == 'O')) {
+		b1btn.disabled = true;
+		b2btn.disabled = true;
+		b3btn.disabled = true;
+		b4btn.disabled = true;
+		b5btn.disabled = true;
+		b6btn.disabled = true;
+
+		b7btn.style.color = "#cdcdcd";
+		b8btn.style.color = "#cdcdcd";
+		b9btn.style.color = "#cdcdcd";
+	} else if ((b3 == 'O' || b3 == 'O') && (b6 == 'O' ||
+		b6 == 'O') && (b9 == 'O' || b9 == 'O')) {
+		b1btn.disabled = true;
+		b2btn.disabled = true;
+		b4btn.disabled = true;
+		b5btn.disabled = true;
+		b7btn.disabled = true;
+		b8btn.disabled = true;
+
+		b3btn.style.color = "#cdcdcd";
+		b6btn.style.color = "#cdcdcd";
+		b9btn.style.color = "#cdcdcd";
+	} else if ((b1 == 'O' || b1 == 'O') && (b5 == 'O' ||
+		b5 == 'O') && (b9 == 'O' || b9 == 'O')) {
+		b2btn.disabled = true;
+		b3btn.disabled = true;
+		b4btn.disabled = true;
+		b6btn.disabled = true;
+		b7btn.disabled = true;
+		b8btn.disabled = true;
+
+		b1btn.style.color = "#cdcdcd";
+		b5btn.style.color = "#cdcdcd";
+		b9btn.style.color = "#cdcdcd";
+	} else if ((b3 == 'O' || b3 == 'O') && (b5 == 'O' ||
+		b5 == 'O') && (b7 == 'O' || b7 == 'O')) {
+		b1btn.disabled = true;
+		b2btn.disabled = true;
+		b4btn.disabled = true;
+		b6btn.disabled = true;
+		b8btn.disabled = true;
+		b9btn.disabled = true;
+
+		b3btn.style.color = "#cdcdcd";
+		b5btn.style.color = "#cdcdcd";
+		b7btn.style.color = "#cdcdcd";
+	} else if ((b2 == 'O' || b2 == 'O') && (b5 == 'O' ||
+		b5 == 'O') && (b8 == 'O' || b8 == 'O')) {
+		b1btn.disabled = true;
+		b3btn.disabled = true;
+		b4btn.disabled = true;
+		b6btn.disabled = true;
+		b7btn.disabled = true;
+		b9btn.disabled = true;
+
+		b2btn.style.color = "#cdcdcd";
+		b5btn.style.color = "#cdcdcd";
+		b8btn.style.color = "#cdcdcd";
+	} else if ((b4 == 'O' || b4 == 'O') && (b5 == 'O' ||
+		b5 == 'O') && (b6 == 'O' || b6 == 'O')) {
+		b1btn.disabled = true;
+		b2btn.disabled = true;
+		b3btn.disabled = true;
+		b7btn.disabled = true;
+		b8btn.disabled = true;
+		b9btn.disabled = true;
+
+		b4btn.style.color = "#cdcdcd";
+		b5btn.style.color = "#cdcdcd";
+		b6btn.style.color = "#cdcdcd";
+	} else if ((b1 == 'X' || b1 == 'O') && (b2 == 'X' ||
+		b2 == 'O') && (b3 == 'X' || b3 == 'O') &&
+		(b4 == 'X' || b4 == 'O') && (b5 == 'X' ||
+			b5 == 'O') && (b6 == 'X' || b6 == 'O') &&
+		(b7 == 'X' || b7 == 'O') && (b8 == 'X' ||
+			b8 == 'O') && (b9 == 'X' || b9 == 'O')) {
+		document.getElementById('print').innerHTML = "Match Tie";
+	} else {
+	}
+}
+
+function myfunc_2() {
+    const cellIds = ["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9"];
+
+    for (const cellId of cellIds) {
+        document.getElementById(cellId).value = '';
+        document.getElementById(cellId).disabled = false;
+        document.getElementById(cellId).style.color = '#27d027';
+    }
+}
+
+flag = 1;
+
+function myfunc_3() {
+	if (flag == 1) {
+		document.getElementById("b1").value = "X";
+		document.getElementById("b1").disabled = true;
+		flag = 0;
+	} else {
+		document.getElementById("b1").value = "O";
+		document.getElementById("b1").disabled = true;
+		flag = 1;
+	}
+}
+
+function myfunc_4() {
+	if (flag == 1) {
+		document.getElementById("b2").value = "X";
+		document.getElementById("b2").disabled = true;
+		flag = 0;
+	} else {
+		document.getElementById("b2").value = "O";
+		document.getElementById("b2").disabled = true;
+		flag = 1;
+	}
+}
+
+function myfunc_5() {
+	if (flag == 1) {
+		document.getElementById("b3").value = "X";
+		document.getElementById("b3").disabled = true;
+		flag = 0;
+	} else {
+		document.getElementById("b3").value = "O";
+		document.getElementById("b3").disabled = true;
+		flag = 1;
+	}
+}
+
+function myfunc_6() {
+	if (flag == 1) {
+		document.getElementById("b4").value = "X";
+		document.getElementById("b4").disabled = true;
+		flag = 0;
+	} else {
+		document.getElementById("b4").value = "O";
+		document.getElementById("b4").disabled = true;
+		flag = 1;
+	}
+}
+
+function myfunc_7() {
+	if (flag == 1) {
+		document.getElementById("b5").value = "X";
+		document.getElementById("b5").disabled = true;
+		flag = 0;
+	} else {
+		document.getElementById("b5").value = "O";
+		document.getElementById("b5").disabled = true;
+		flag = 1;
+	}
+}
+
+function myfunc_8() {
+	if (flag == 1) {
+		document.getElementById("b6").value = "X";
+		document.getElementById("b6").disabled = true;
+		flag = 0;
+	} else {
+		document.getElementById("b6").value = "O";
+		document.getElementById("b6").disabled = true;
+		flag = 1;
+	}
+}
+
+function myfunc_9() {
+	if (flag == 1) {
+		document.getElementById("b7").value = "X";
+		document.getElementById("b7").disabled = true;
+		flag = 0;
+	} else {
+		document.getElementById("b7").value = "O";
+		document.getElementById("b7").disabled = true;
+		flag = 1;
+	}
+}
+
+function myfunc_10() {
+	if (flag == 1) {
+		document.getElementById("b8").value = "X";
+		document.getElementById("b8").disabled = true;
+		flag = 0;
+	} else {
+		document.getElementById("b8").value = "O";
+		document.getElementById("b8").disabled = true;
+		flag = 1;
+	}
+}
+
+function myfunc_11() {
+	if (flag == 1) {
+		document.getElementById("b9").value = "X";
+		document.getElementById("b9").disabled = true;
+		flag = 0;
+	} else {
+		document.getElementById("b9").value = "O";
+		document.getElementById("b9").disabled = true;
+		flag = 1;
+	}
+}
+
+   function openClockOverlay() {
+      const clockOverlay = document.getElementById('clock-overlay');
+      clockOverlay.style.display = 'flex';
+    }
+
+    // Function to close the clock overlay
+    function closeClockOverlay() {
+      const clockOverlay = document.getElementById('clock-overlay');
+      clockOverlay.style.display = 'none';
+    }
+
+    let hr = document.querySelector('#hr');
+    let mn = document.querySelector('#mn');
+    let sc = document.querySelector('#sc');
+    setInterval(()=> {
+        let day = new Date();
+        let hh = day.getHours() * 30;
+        let mm = day.getMinutes() * 6;
+        let ss = day.getSeconds() * 6
+        hr.style.transform = `rotateZ(${hh + (mm/12)}deg)`;
+        mn.style.transform = `rotateZ(${mm}deg)`;
+        sc.style.transform = `rotateZ(${ss}deg)`;
+    })
+
+    function closeSidebar() {
+      // Close the sidebar
+      document.getElementById("sidebar").style.width = "0";
+    }
+
+const cursor = document.querySelector('.cursor');
+const cursorinner = document.querySelector('.cursor2');
+const a = document.querySelectorAll('a');
+
+document.addEventListener('mousemove', function(e){
+  var x = e.clientX;
+  var y = e.clientY;
+  cursor.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`
+});
+
+document.addEventListener('mousemove', function(e){
+  var x = e.clientX;
+  var y = e.clientY;
+  cursorinner.style.left = x + 'px';
+  cursorinner.style.top = y + 'px';
+});
+
+document.addEventListener('mousedown', function(){
+  cursor.classList.add('click');
+  cursorinner.classList.add('cursorinnerhover')
+});
+
+document.addEventListener('mouseup', function(){
+  cursor.classList.remove('click')
+  cursorinner.classList.remove('cursorinnerhover')
+});
+
+const cursorPointed = document.querySelector(".cursor")
+</script>
+</body>
+</html>
